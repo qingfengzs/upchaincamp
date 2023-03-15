@@ -1,6 +1,9 @@
 # w2-1 作业
 
 ## 编写一个Bank合约
+合约地址:0x541802E082D522E980F340ca3E34C549893BdD86
+ethscan:https://goerli.etherscan.io/address/0x541802E082D522E980F340ca3E34C549893BdD86#code
+
 ### 通过 Metamask 向Bank合约转账ETH
 合约内定义receive函数,用来接受ETH
 ```solidity
