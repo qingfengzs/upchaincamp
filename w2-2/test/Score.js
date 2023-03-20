@@ -26,7 +26,7 @@ describe("Score contract", function () {
 
   it("测试分数小于100", async function() {
     try {
-      await score.addScore(student.address, 101);
+      await score.addScore(student1.address, 101);
     } catch (error) {
       expect(error.message).to.contain("score must be less than 100");
       return;
@@ -37,14 +37,18 @@ describe("Score contract", function () {
   it("测试非教师修改", async function () {
     try{
       const nonTeacher = await ethers.getSigner(2);
-      await nonTeacher.addScore(student1.address, 90);
+      await score.connect(nonTeacher).addScore(student1.address, 90);
     }catch(error){
       expect(error.message).to.contain("only teacher can modify");
+      return;
     }
     expect.fail("测试不通过");
   });
 
-  it("should revert if student is not found", async function () {
-    await expect(score.updateScore(student1.address, 90)).to.be.revertedWith("student not found");
+  it("测试更新Score", async function () {
+    await score.addScore(student1.address,85);
+    await score.updateScore(student1.address,75);
+    expect(await score.getScore(student1.address)).to.be.equal(75);
   });
+
 });

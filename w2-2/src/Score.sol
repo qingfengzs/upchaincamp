@@ -3,12 +3,11 @@
 pragma solidity ^0.8.0;
 
 interface IScore {
-
     function addScore(address _student, uint8 _score) external;
 
-    function updateScore(address _student, uint8 _score)external;
+    function updateScore(address _student, uint8 _score) external;
 
-    function getScore(address _student)external view returns(uint8);
+    function getScore(address _student) external view returns (uint8);
 }
 
 /**
@@ -24,9 +23,9 @@ contract Score is IScore {
         teacher = _teacher;
     }
 
-    event ScoreAddLog(address student,uint8 score);
+    event ScoreAddLog(address student, uint8 score);
 
-    event ScoreUpdateLog(address student,uint8 before,uint8 now);
+    event ScoreUpdateLog(address student, uint8 before, uint8 now);
 
     error ScoreError(string msg);
 
@@ -46,18 +45,26 @@ contract Score is IScore {
     }
 
     // 新增学生分数记录,添加防重校验
-    function addScore(address _student, uint8 _score) external override onlyTeacher checkScore(_score) {
-      scores[_student] = _score;
-      emit ScoreAddLog(_student,_score);
+    function addScore(
+        address _student,
+        uint8 _score
+    ) external override onlyTeacher checkScore(_score) {
+        scores[_student] = _score;
+        emit ScoreAddLog(_student, _score);
     }
 
     // 更新学生分数,检查地址合法性
-    function updateScore(address _student, uint8 _score)external override onlyTeacher checkScore(_score){
-      require(_student != address(0),"student not found");
-      scores[_student] = _score;
+    function updateScore(
+        address _student,
+        uint8 _score
+    ) external override onlyTeacher checkScore(_score) {
+        uint8 _oldScore = scores[_student];
+        scores[_student] = _score;
+
+        emit ScoreUpdateLog(_student,_oldScore, _score);
     }
 
-    function getScore(address _student)external override view returns(uint8){
-      return scores[_student];
+    function getScore(address _student) external view override returns (uint8) {
+        return scores[_student];
     }
 }

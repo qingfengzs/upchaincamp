@@ -2,7 +2,11 @@ require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 const account = process.env.GOERLI_PRIVATE_KEY;
 const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+const alchemySepoliaApiKey = process.env.ALCHEMY_API_KEY;
 const etherscanKey = process.env.ETHERSCAN_KEY;
+
+// https://eth-goerli.g.alchemy.com/v2/
+// https://eth-sepolia.g.alchemy.com/v2/
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -11,6 +15,10 @@ module.exports = {
     hardhat:{},
     goerli: {
       url: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+      accounts: [account]
+    },
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${alchemySepoliaApiKey}`,
       accounts: [account]
     }
   },
