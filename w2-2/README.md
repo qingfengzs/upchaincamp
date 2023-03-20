@@ -2,6 +2,9 @@
 ## 编写合约Score,用于记录学生(地址)分数
 > mumbai Score合约地址:0xc71EA3C160426c2Fad4607e1BC9aa0916aCC19be
 
+## 单元测试
+![](images/score-test.png)
+
 设计思路：
 1. 利用一个mapping保存学生地址到分数的映射
 ```javascript
@@ -70,6 +73,12 @@ function updateScore(
 ## 编写合约Teacher作为老师,通过Iscore接口调用修改学生分数
 mumbai Teacher合约地址:0xC42bef63Cc236dd933AE9148143127d99480136c
 mumbai scan 链接：https://mumbai.polygonscan.com/address/0xC42bef63Cc236dd933AE9148143127d99480136c#code
+
+## 单元测试
+![](images/teacher-test.png)
+
+## 验证合约
+![](images/verify.png)
 
 设计思路：
 1. 定义相关状态变量
