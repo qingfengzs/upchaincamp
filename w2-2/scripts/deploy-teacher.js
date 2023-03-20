@@ -2,7 +2,7 @@
 const hre = require("hardhat");
 
 async function main() {
-
+  const Score = await ethers.getContractFactory("Score");
   const Teacher = await hre.ethers.getContractFactory("Teacher");
   const teacher = await Teacher.deploy();
   
