@@ -103,8 +103,13 @@ mumbai链接：https://mumbai.polygonscan.com/address/0xA476744c23fA8Ba7E952BC1B
 ### 定义上架方法
 
 1. 上架需要先授权nft给交易市场合约
-2. 调用list方法，方法内部调用ERC721的safeTransferFrom方法，将NFT转给市场合约
-3. 填充Order结构体，保存到orders内
+
+授权交易链接：https://mumbai.polygonscan.com/tx/0x4f74fe2212b899a8abe8e268e600a3251a15739fd19e2aa5048155be366a532b
+
+![](images/%E6%8E%88%E6%9D%83NFT.png)
+
+1. 调用list方法，方法内部调用ERC721的safeTransferFrom方法，将NFT转给市场合约
+2. 填充Order结构体，保存到orders内
    
 ```
 // 上架
@@ -126,10 +131,14 @@ mumbai链接：https://mumbai.polygonscan.com/address/0xA476744c23fA8Ba7E952BC1B
         emit Listed(msg.sender, _tokenId, _price);
     }
 
+上架链接：
+https://mumbai.polygonscan.com/tx/0x1e70f9ce9eb4c824b349fa00e23c70f9d80ef352eba4fe7baed9b2c903b75356
+
 
 ```
+![](images/list.png)
 
-
+![](images/listed.png)
 
 
 ### 定义下架方法
@@ -156,6 +165,9 @@ mumbai链接：https://mumbai.polygonscan.com/address/0xA476744c23fA8Ba7E952BC1B
 
 ### 定义购买方法
 1. 购买需要先给市场合约授权erc20 price个代币
+
+授权链接：https://mumbai.polygonscan.com/tx/0x47db675fd16893b9b84abfbf992719443947b639f1a5780086cc0061984dcd13
+
 2. 调用购买buy方法，先调用erc20的transferFrom，从购买者账户转账刀销售者账户
 3. 调用ERC721的safeTransferFrom方法，将NFT转给购买者
 ```
@@ -183,3 +195,13 @@ mumbai链接：https://mumbai.polygonscan.com/address/0xA476744c23fA8Ba7E952BC1B
     }
 
 ```
+
+购买交易链接：
+https://mumbai.polygonscan.com/tx/0x806e5a7376190f443047a942053355ae18e935419fbac46f0c8fe0752f27677f
+
+![](image/../images/buy-nft.png)
+
+opensea展示
+![](images/opensea.png)
+
+![](images/opensea-buy.png)
