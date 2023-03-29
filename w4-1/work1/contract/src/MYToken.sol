@@ -2,13 +2,12 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 
-contract JY is ERC20 {
+contract JYToken is ERC20Permit {
 
-    constructor() ERC20("JinYu", "JY") {
-        // 设置总的代币数量
-        _mint(msg.sender, 10000 * (10 ** uint256(decimals())));
+    constructor() ERC20("JYToken", "JY") ERC20Permit("JYToken") {
+        _mint(msg.sender, 10000 * 10 ** 18);
     }
     
 }
