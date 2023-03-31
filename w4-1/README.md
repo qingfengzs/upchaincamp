@@ -177,41 +177,46 @@ NFT合约地址：0xb72056E262DD0E155aB76714d5165f63bF09bA68
 ```
 // 部分代码展示
 // 监听事件
-    async queryTransferEvent() {
-      if(this.readonlyNft == null){
-        this.$message.error("请先绑定NFT");
-        return false;
-      }
+async queryTransferEvent() {
+	if(this.readonlyNft == null){
+		this.$message.error("请先绑定NFT");
+		return false;
+	}
+	if(this.startBlockNumber == '' || this.startBlockNumber == null ){
+		this.$message.error("请输入起始区块号");
+		return false;
+	}
 
-      const block = await this.provider.getBlockNumber()
-      // 首先查询历史事件
-      const historyEvent = await this.readonlyNft.queryFilter('Transfer',33490097,block);
-      historyEvent.forEach((item)=>{
-        console.log(JSON.stringify(item.args))
-        this.tableData.push({
-          from: item.args[0],
-          to: item.args[1],
-          tokenId:ethers.BigNumber.from(item.args[2])
-        })
-      });
+	const block = await this.provider.getBlockNumber()
 
-      // 监听新产生的事件
-      const eventTransfer = this.readonlyNft.filters.Transfer(null, null, null);
-      this.nft.on(eventTransfer, (from, to, tokenId) => {
-        console.log(from, to, tokenId);
-        this.tableData.push({
-          from: from,
-          to: to,
-          tokenId: tokenId
-        });
-        this.$forceUpdate()
-      })
-      
-      this.$message({
-        message: '开始监听新事件',
-        type: 'success'
-      });
-    }
+	// 首先查询历史事件33490097
+	const historyEvent = await this.readonlyNft.queryFilter('Transfer',parseInt(this.startBlockNumber),block);
+	historyEvent.forEach((item)=>{
+		console.log(JSON.stringify(item.args))
+		this.tableData.push({
+			from: item.args[0],
+			to: item.args[1],
+			tokenId:ethers.BigNumber.from(item.args[2])
+		})
+	});
+
+	// 监听新产生的事件
+	const eventTransfer = this.readonlyNft.filters.Transfer(null, null, null);
+	this.nft.on(eventTransfer, (from, to, tokenId) => {
+		console.log(from, to, tokenId);
+		this.tableData.push({
+			from: from,
+			to: to,
+			tokenId: tokenId
+		});
+		this.$forceUpdate()
+	})
+	
+	this.$message({
+		message: '开始监听新事件',
+		type: 'success'
+	});
+}
 
 
 ```
