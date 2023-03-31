@@ -1,37 +1,37 @@
 <template>
-  <div>
-    <button @click="connect"> 链接钱包 </button>
-    <div>
-      我的地址 : {{ account }}
+  <div class="container"> <button @click="connect" class="button">链接钱包</button>
+    <div class="address">我的地址: {{ account }}</div>
+    <div class="token-info">
+      <h2>基本信息</h2>
+      <div class="info-item">Token 名称: {{ name }}</div>
+      <div class="info-item">Token 符号: {{ symbol }}</div>
+      <div class="info-item">Token 精度: {{ decimal }}</div>
+      <div class="info-item">Token 发行量: {{ supply }}</div>
+      <div class="info-item">我的 Token 余额: {{ balance }}</div>
+      <div class="info-item">我的 ETH 余额: {{ ethbalance }}</div>
+      
     </div>
-    <div>
-      <br /> Token 名称 : {{ name }}
-      <br /> Token 符号 : {{ symbol }}
-      <br /> Token 精度 : {{ decimal }}
-      <br /> Token 发行量 : {{ supply }}
-      <br /> 我的 Token 余额 : {{ balance }}
-      <br /> 我的ETH余额 : {{ ethbalance }}
+    <div class="transfer">
+      <h2>转账</h2>
+      <div class="transfer-item"> 转账到: <input type="text" v-model="recipient" class="input" /> </div>
+      <div class="transfer-item"> 转账金额: <input type="text" v-model="amount" class="input" /> </div>
+      <button @click="transfer" class="button">转账</button>
     </div>
-    <div>
-      <br /> 存款余额 : {{ depositBalance }}
+    <div class="bank">
+      <div class="info-item">我的存款金额余额: {{ depositBalance }}</div>
+      <h2>存款:授权+转账</h2>
+      <!-- <div class="transfer-item"> 授权到: <input type="text" v-model="approveRecipient" class="input" /> </div> -->
+      <div class="transfer-item"> 转账金额: <input type="text" placeholder="输入质押量"  v-model="approveAmount" class="input" /> </div>
+      <button @click="approve" class="button">1.授权</button> 
+      <button @click="transferFrom" class="button">2.转账</button>
     </div>
-    <div>
-      <br />转账到:
-      <input type="text" v-model="recipient" />
-      <br />转账金额
-      <input type="text" v-model="amount" />
-      <br />
-      <button @click="transfer"> 转账 </button>
+    <div class="deposit">
+      <h2>存款:离线签名</h2> <input v-model="stakeAmount" placeholder="输入质押量" class="input" />
+       <button @click="permitDeposit" class="button">离线授权存款</button>
     </div>
-
-    <div>
-      <input v-model="stakeAmount" placeholder="输入质押量" />
-      <button @click="permitDeposit">离线授权存款</button>
-    </div>
-
-    <div>
-      <input v-model="withdrawAmount" placeholder="输入提取数量" />
-      <button @click="withdraw">提款</button>
+    <div class="withdraw">
+      <h2>提款</h2> <input v-model="withdrawAmount" placeholder="输入提取数量" class="input" /> 
+      <button @click="withdraw" class="button">提款</button>
     </div>
   </div>
 </template>
@@ -58,6 +58,8 @@ export default {
     return {
       account: null,
       recipient: null,
+      approveRecipient:null,
+      approveAmount:null,
       amount: null,
       balance: null,
       ethbalance: null,
@@ -72,7 +74,7 @@ export default {
       // vault 
       vault: '',
       depositBalance: 0,
-      withdrawAmount:0,
+      withdrawAmount: 0,
     }
   },
   methods: {
@@ -145,11 +147,11 @@ export default {
       this.erc20Token.balanceOf(this.account).then((r) => {
         this.balance = ethers.utils.formatUnits(r, 18);
       })
-      
+
       this.vault.deposited(this.account).then((r) => {
         this.depositBalance = ethers.utils.formatUnits(r, 18);
       })
-      
+
     },
 
 
@@ -167,8 +169,37 @@ export default {
 
 
     transfer() {
+      if(this.account == null ){
+        this.$message.error("请先连接钱包");
+        return false;
+      }
       let amount = ethers.utils.parseUnits(this.amount, 18);
       this.erc20Token.transfer(this.recipient, amount).then((r) => {
+        console.log(r);  // 返回值不是true
+        this.readContract();
+      })
+    },
+
+    approve() {
+      if(this.account == null ){
+        this.$message.error("请先连接钱包");
+        return false;
+      }
+      let amount = ethers.utils.parseUnits(this.approveAmount, 18);
+      this.erc20Token.approve(this.vault.address, amount).then((r) => {
+        console.log(r);  // 返回值不是true
+        this.readContract();
+      })
+    },
+
+    transferFrom() {
+      if(this.account == null ){
+        this.$message.error("请先连接钱包");
+        return false;
+      }
+      let amount = ethers.utils.parseUnits(this.approveAmount, 18);
+      console.log(`from:${this.account},to:${this.approveRecipient},amount:${amount}`)
+      this.vault.deposit(this.account, amount).then((r) => {
         console.log(r);  // 返回值不是true
         this.readContract();
       })
@@ -219,7 +250,7 @@ export default {
       }
 
     },
-    async withdraw(){
+    async withdraw() {
       let amount = ethers.utils.parseUnits(this.withdrawAmount).toString();
       let tx = await this.vault.withdraw(amount);
       let result = await tx.wait();
@@ -229,4 +260,65 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style>
+.container {
+  background-color: #1c1c1c;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  padding-left: 40%;
+}
+
+.button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #3e8e41;
+}
+
+.address {
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.token-info {
+  margin-top: 20px;
+}
+
+.info-item {
+  margin-bottom: 10px;
+}
+
+.transfer {
+  margin-top: 20px;
+}
+
+.transfer-item {
+  margin-bottom: 10px;
+}
+
+.input {
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+  margin-right: 10px;
+}
+
+.deposit {
+  margin-top: 20px;
+}
+
+.withdraw {
+  margin-top: 20px;
+}
+</style>
