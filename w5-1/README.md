@@ -2,6 +2,10 @@
 
 ![](images/work.png)
 
+## 基本信息
+
+**使用ChainLink Automation实现**
+
 Token地址：0x90D81B5387a350820C8955FC83b67D11F6aEb7Fb
 
 Vault地址：0xc502369b9498e304a7302766e752727086672419
