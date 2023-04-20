@@ -1,8 +1,6 @@
-require("@nomicfoundation/hardhat-toolbox");
-require('hardhat-abi-exporter');
-
-let dotenv = require('dotenv')
-dotenv.config({ path: "./.env" })
+require("@nomiclabs/hardhat-waffle");
+// require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
 const account = process.env.GOERLI_PRIVATE_KEY;
 const alchemyApiKey = process.env.ALCHEMY_API_KEY;
@@ -11,10 +9,7 @@ const etherscanKey = process.env.ETHERSCAN_KEY;
 const mumbaiKey = process.env.MUMBAI_KEY;
 const mumbaiScanApiKey = process.env.MUMBAI_POLYGON_API_KEY;
 
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.18",
-
   networks: {
     hardhat:{},
     goerli: {
@@ -30,17 +25,21 @@ module.exports = {
       accounts: [account]
     },
   },
-
-  abiExporter: {
-    path: "./deployments/abi",
-    clear: true,
-    flat: true,
-    only: [],
-    spacing: 2,
-    pretty: true,
-  },
-
   etherscan: {
     apiKey: `${etherscanKey}`
   },
+  defaultNetwork: "localhost",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.13",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200
+          }
+        }
+      },
+    ]
+  }
 };

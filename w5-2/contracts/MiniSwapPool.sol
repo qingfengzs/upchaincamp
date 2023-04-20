@@ -69,6 +69,7 @@ contract MiniSwapPool is ERC20 {
 
         _burn(address(this), liquidity);
 
+
         assert(IERC20(token0).transfer(msg.sender, amount0));
         assert(IERC20(token1).transfer(msg.sender, amount1));
         reserve0 = reserve0 - amount0;
