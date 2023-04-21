@@ -29,7 +29,6 @@ contract MyTokenMarket {
         // (uint amountToken, uint amountETH, uint liquidity) = 
         IUniswapV2Router01(router).addLiquidity(tokenA,tokenB, tokenAmountA,tokenAmountB, 0, 0, msg.sender, block.timestamp);
 
-        //TODO: handle left
     }
 
     // 添加流动性:token-eth
@@ -45,17 +44,16 @@ contract MyTokenMarket {
     }
 
     // 用 Token 购买 Token
-    function buyTokenWithToken(address tokenA,address tokenB,uint amountIn,uint minTokenAmount) public payable {
+    function buyTokenWithToken(address tokenA,address tokenB,uint amountIn,uint minTokenAmount) public {
         address[] memory path = new address[](2);
         path[0] = tokenA;
         path[1] = tokenB;
+        // 转给market合约tokanA，用于兑换tokenB
+        IERC20(tokenA).safeTransferFrom(msg.sender,address(this),amountIn);
 
-        IUniswapV2Router01(router).swapTokensForExactTokens(minTokenAmount,amountIn, path, address(this), block.timestamp);
+        IERC20(tokenA).safeApprove(router, amountIn);
 
-        // uint amount = IERC20(token).balanceOf(address(this));
-        // IERC20(token).safeApprove(masterchef, amount);
-        // IERC20(token).transfer(msg.sender, amount);
-        // IMasterChef(masterchef).deposit(1, amount);
+        IUniswapV2Router01(router).swapExactTokensForTokens(amountIn,minTokenAmount, path,msg.sender, block.timestamp);
 
     }
 
