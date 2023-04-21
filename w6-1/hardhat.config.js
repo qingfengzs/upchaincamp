@@ -4,64 +4,46 @@ require('hardhat-abi-exporter');
 let dotenv = require('dotenv')
 dotenv.config({ path: "./.env" })
 
-const mnemonic = process.env.MNEMONIC
-const scankey = process.env.ETHERSCAN_API_KEY
-const PRIVATE_KEY1 = process.env.PRIVATEKEY
+const account = process.env.GOERLI_PRIVATE_KEY;
+const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+const alchemySepoliaApiKey = process.env.ALCHEMY_API_KEY;
+const etherscanKey = process.env.ETHERSCAN_KEY;
+const mumbaiKey = process.env.MUMBAI_KEY;
+const mumbaiScanApiKey = process.env.MUMBAI_POLYGON_API_KEY;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.18",
 
   networks: {
+    hardhat:{},
     dev: {
-      url: "http://127.0.0.1:8545",
-      chainId: 31337,
-    },
-    hardhat: {
-      chainId: 31337,
-      gas: 12000000,
-      accounts: {
-        mnemonic: mnemonic,
-      },
+      url: 'http://127.0.0.1:7545',
+      chainId: 1337
     },
     goerli: {
-      url: "https://eth-goerli.api.onfinality.io/public",
-      accounts: {
-        mnemonic: mnemonic,
-      },
-      chainId: 5,
+      url: `https://eth-goerli.g.alchemy.com/v2/${alchemyApiKey}`,
+      accounts: [account]
+    },
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${alchemySepoliaApiKey}`,
+      accounts: [account]
     },
     mumbai: {
-      url: "https://polygon-mumbai.blockpi.network/v1/rpc/public",
-      accounts: {
-        mnemonic: mnemonic,
-      },
-      chainId: 80001,
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${alchemySepoliaApiKey}`,
+      accounts: [account]
     },
-
-    sepolia: {
-      url: "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
-      accounts: {
-        mnemonic: mnemonic,
-      },
-      chainId: 11155111,
-    },
-    
-
   },
-
-
   abiExporter: {
-      path: './deployments/abi',
-      clear: true,
-      flat: true,
-      only: [],
-      spacing: 2,
-      pretty: true,
+    path: "./deployments/abi",
+    clear: true,
+    flat: true,
+    only: [],
+    spacing: 2,
+    pretty: true,
   },
-
+  defaultNetwork: 'dev',
   etherscan: {
-    apiKey: scankey
-},
-
+    apiKey: `${etherscanKey}`
+  },
 };
