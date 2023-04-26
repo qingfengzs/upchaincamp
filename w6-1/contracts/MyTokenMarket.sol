@@ -31,8 +31,7 @@ contract MyTokenMarket {
         IERC20(myToken).safeTransferFrom(msg.sender, address(this),tokenAmount);
         IERC20(myToken).safeApprove(router, tokenAmount);
 
-        // ingnore slippage
-        // (uint amountToken, uint amountETH, uint liquidity) = 
+        // ingnore slippage、        // (uint amountToken, uint amountETH, uint liquidity) = 
         IUniswapV2Router01(router).addLiquidityETH{value: msg.value}(myToken, tokenAmount, 0, 0, msg.sender, block.timestamp);
 
         //TODO: handle left
